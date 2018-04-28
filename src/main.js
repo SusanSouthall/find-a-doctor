@@ -4,17 +4,14 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
-// function getData(userInput) {
-//   $('#results').append(["body"]["data"]["profile"]["first_name"];
-//   $('#results').append(body.data.profile.last_name);
-//   $('#results').append(body.data.practices.visit_address.street.city.state);
-//   $('#results').append( );
-//   $('#results').append()
-// }
 function getData(response) {
-  $('#results').append(body["data"][0]["profile"]["first_name"]);
+  $('#results').append("<img src=" + response["data"][0]["profile"]["image_url"] + ">");
+  $('#results').append("<br>" + response["data"][0]["profile"]["first_name"] + " " + response["data"][0]["profile"]["last_name"]);
+  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["street"]);
+  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["street2"]);
+  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["city"]);
+  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["state"]);
 }
-
 
 $(document).ready(function() {
   $('#find').click(function() {
@@ -22,11 +19,6 @@ $(document).ready(function() {
     $('#symptom-checker').val("");
 
     let doctor = new Doctor();
-
-
-
-
-
   // let answer = doctor.findDoctor(symptom)
   //   .then(function(response) {
   //     let body = JSON.parse(response);
@@ -37,28 +29,21 @@ $(document).ready(function() {
       // let giphyResponse = JSON.parse(response);
       // let image = giphyResponse["data"][0]["images"]["downsized"]["url"];
       // $('.showImage').html(`<img src='${image}'>`);
-  let promise = doctor.findDoctor(symptom);
-  promise.then(function(response) {
-    response = JSON.parse(response);
-    getData(response);
-    }, function(Error) {
-    console.log("sorry, there is an error loading your requested information.");
-  }
-
-    });
+    let promise = doctor.findDoctor(symptom);
+    promise.then(function(response) {
+      response = JSON.parse(response);
+      getData(response);
+      }), function(Error) {
+      console.log("sorry, there is an error loading your requested information.");
+      }
   });
 });
-
-
 
   // $('#results').append("Call one of these doctors to help you" + "<br>" + answer);
   // $('.showTemp').text(`The temperature in Kelvins is ${body.main.temp} degrees.`);
   // }, function(error) {
   // $('#results').text(`There was an error processing your request: ${error.message}`);
   // });
-
-
-
 
   // let promise = doctor.stormGlassLogic(latInput, longInput);//run this instance on the method from the BL
   // promise.then(function(response){
