@@ -1,5 +1,4 @@
-import { Doctors } from "./doctor.js"
-import {} from "./symptom.js"
+import { Doctor } from "./doctor.js"
 import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,16 +9,38 @@ $(document).ready(function() {
     let symptom = $('#symptom-checker').val();
     $('#symptom-checker').val("");
 
-    let doctor = new Doctor();//instance to grab class from BL
+    let doctor = new Doctor();
 
-  let promise = doctor.stormGlassLogic(latInput, longInput);//run this instance on the method from the BL
-  promise.then(function(response){
-    response = JSON.parse(response); //cleans code
-    // console.log(response + "this is after the promise");
-    getElementsStorm(response, longInput, latInput); //calls on the function outside document ready function
-  }, function(Error) { //display error
-    console.log("Sorry, there is an Error loading your requested information!");
+  let answer = doctor.findDoctor(symptom)
+    .then(function(response) {
+      let body = JSON.parse(response);
+      let name = body.data.practice;
+      return doctor.findSpecificDoctor(name);
+    })
+    .then(function(response) {
+      // let giphyResponse = JSON.parse(response);
+      // let image = giphyResponse["data"][0]["images"]["downsized"]["url"];
+      console.log("whoohoo");
+      // $('.showImage').html(`<img src='${image}'>`);
   });
+
+  $('#results').append("Call one of these doctors to help you" + "<br>" + answer);
+  // $('.showTemp').text(`The temperature in Kelvins is ${body.main.temp} degrees.`);
+  // }, function(error) {
+  // $('#results').text(`There was an error processing your request: ${error.message}`);
+  // });
+
+
+
+
+  // let promise = doctor.stormGlassLogic(latInput, longInput);//run this instance on the method from the BL
+  // promise.then(function(response){
+  //   response = JSON.parse(response); //cleans code
+    // console.log(response + "this is after the promise");
+  //   getElementsStorm(response, longInput, latInput); //calls on the function outside document ready function
+  // }, function(Error) { //display error
+  //   console.log("Sorry, there is an Error loading your requested information!");
+  // });
 
 
     // let promise = new Promise(function(resolve, reject) {
