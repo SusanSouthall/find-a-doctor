@@ -8,10 +8,13 @@
 
 _This application allows a person to enter either a medical issue or a doctor's name in a field and returns a listing of doctors in the Portland area that can help them._
 
-### Specs
-| Spec | Input | Output |
-| :-------------     | :------------- | :------------- |
-| **Program will ** | User input:  | Output:  |
+### Specifications
+
+* _A person should be able to enter a medical concern and receive a list of doctors from the Portland area._
+* _A person should be able to enter a specific doctor's name and receive a list of doctors with that in that area._
+* _The response should include any doctors related to the query including their name, address, phone number, website, and whether they are accepting new patients._
+* _The API call should return a notification with an error message if the request results in an error._
+* _The application also returns a response of "Unfortunately, we could not find any doctors in this area for your concern.  Please try another symptom to describe your concern or increase the area search."_
 
 
 

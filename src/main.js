@@ -3,14 +3,52 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
+import './doctor.js';
+
+function acceptPatients(newPatients) {
+  let counter = 0;
+  if (newPatients) {
+    if (counter > 0) {
+      return;
+    }else {
+     $('#results').append("We are accepting new patients." + "<br>");
+     counter += 1;
+     }
+  }
+}
 
 function getData(response) {
-  $('#results').append("<img src=" + response["data"][0]["profile"]["image_url"] + ">");
-  $('#results').append("<br>" + response["data"][0]["profile"]["first_name"] + " " + response["data"][0]["profile"]["last_name"]);
-  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["street"]);
-  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["street2"]);
-  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["city"]);
-  $('#results').append("<br>" + response["data"][0]["practices"][0]["visit_address"]["state"]);
+  for (let i=0; i<response["data"].length; i++) {
+    const image = response["data"][i]["profile"]["image_url"];
+    const firstName = response["data"][i]["profile"]["first_name"];
+    const lastName = response["data"][i]["profile"]["last_name"];
+    const street = response["data"][i]["practices"][0]["visit_address"]["street"];
+    const street2 = response["data"][i]["practices"][0]["visit_address"]["street2"];
+    const city = response["data"][i]["practices"][0]["visit_address"]["city"];
+    const state = response["data"][i]["practices"][0]["visit_address"]["state_long"];
+    const number = response["data"][i]["practices"][0]["phones"][0]["number"];
+    const website = response["data"][i]["practices"][0]["website"];
+    const newPatients = response["data"][i]["practices"][0]["accepts_new_patients"];
+
+    $('#results').append("<br>" + "<img src=" + image + ">");
+    $('#results').append("<br>" + firstName + " " + lastName);
+    $('#results').append("<br>" + street);
+    if (street2) {
+      $('#results').append("<br>" + street2);
+      }
+    $('#results').append("<br>" + city);
+    $('#results').append("<br>" + state);
+    $('#results').append("<br>" + number + "<br");
+    for (let w=0; w<response["data"][i]["practices"].length; w++) {
+      let counter = 0;
+      if (website) {
+        $('#results').append("<br>" + '<a href="' + website + '">' + website + '</a>' + "<br>");
+      }else {
+        $('#results').append("<br>");
+      }
+    }
+    acceptPatients(newPatients);
+  }
 }
 
 $(document).ready(function() {
@@ -19,16 +57,6 @@ $(document).ready(function() {
     $('#symptom-checker').val("");
 
     let doctor = new Doctor();
-  // let answer = doctor.findDoctor(symptom)
-  //   .then(function(response) {
-  //     let body = JSON.parse(response);
-  //     let name = body.data;
-  //     return doctor.findDoctor(name);
-  //   })
-  //   .then(function(response) {
-      // let giphyResponse = JSON.parse(response);
-      // let image = giphyResponse["data"][0]["images"]["downsized"]["url"];
-      // $('.showImage').html(`<img src='${image}'>`);
     let promise = doctor.findDoctor(symptom);
     promise.then(function(response) {
       response = JSON.parse(response);
@@ -38,47 +66,3 @@ $(document).ready(function() {
       }
   });
 });
-
-  // $('#results').append("Call one of these doctors to help you" + "<br>" + answer);
-  // $('.showTemp').text(`The temperature in Kelvins is ${body.main.temp} degrees.`);
-  // }, function(error) {
-  // $('#results').text(`There was an error processing your request: ${error.message}`);
-  // });
-
-  // let promise = doctor.stormGlassLogic(latInput, longInput);//run this instance on the method from the BL
-  // promise.then(function(response){
-  //   response = JSON.parse(response); //cleans code
-    // console.log(response + "this is after the promise");
-  //   getElementsStorm(response, longInput, latInput); //calls on the function outside document ready function
-  // }, function(Error) { //display error
-  //   console.log("Sorry, there is an Error loading your requested information!");
-  // });
-
-
-    // let promise = new Promise(function(resolve, reject) {
-    //   let doctorRequest = new XMLHttpRequest();
-    //   let url = `https://api.betterdoctor.com/2016-03-01/doctors?query=${symptoms}&location=45.523062%2C-122.676482%2C100&user_location=45.523062%2C-122.676482&skip=0&limit=10&user_key=${process.env.exports.apiKey}`
-
-      // let url = `https://api.betterdoctor.com/2016-03-01/doctors?query=${symptoms}&location=45.523062, -122.676482&limit=10&user_key=${process.env.exports.apiKey}`;
-    //   doctorRequest.onload = function() {
-    //     if (this.status === 200) {
-    //       resolve(doctorRequest.response);
-    //       console.log(doctorRequest.response);
-    //     } else {
-    //       reject(Error(doctorRequest.statusText));
-    //     }
-    //   }
-    //   doctorRequest.open("GET", url, true);
-    //   doctorRequest.send();
-    // });
-    //
-    // promise.then(function(response) {
-    //   let body = JSON.parse(response);
-    //   $('#results').append("Call one of these doctors to help you" + "<br>" + body.data.name);
-    //   // $('.showTemp').text(`The temperature in Kelvins is ${body.main.temp} degrees.`);
-    // }, function(error) {
-    //   $('#results').text(`There was an error processing your request: ${error.message}`);
-  //   // });
-//    });
-// });
-// 45.523062, -122.676482
